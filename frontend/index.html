@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CoBudget - Smart Cart</title>
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font (Optional for better look) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <style>
+    /* UPI Section Styling */
+    #upi-section input {
+      padding: 8px;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    #upi-section button {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    #upi-section #upiQr img {
+      margin-top: 15px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- 👤 Auth Section -->
+    <div id="auth-container" class="bg-white rounded-2xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Login / Signup</h2>
+      <input type="email" id="email" placeholder="Email" class="w-full border rounded px-3 py-2 mb-2" />
+      <input type="password" id="password" placeholder="Password" class="w-full border rounded px-3 py-2 mb-4" />
+      <div class="flex gap-3">
+        <button onclick="login()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
+        <button onclick="signup()" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Signup</button>
+      </div>
+    </div>
+
+   <!-- 🔝 Navbar -->
+  <nav class="bg-white shadow-md py-4 px-6 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">CoBudget</h1>
+      <div id="welcome-section" class="hidden">
+        <span class="text-sm font-medium">Welcome, <span id="userEmail" class="font-semibold"></span>!</span>
+        <button onclick="logout()" class="ml-4 text-sm text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 📦 Main App Container -->
+  
+    <!-- 💸 Budget Section -->
+    <div id="budget-section" class="hidden bg-white rounded-2xl shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Set Monthly Budget</h3>
+      <input type="number" id="monthlyBudget" placeholder="₹ e.g. 2000" class="w-full border rounded px-3 py-2 mb-2" />
+      <button onclick="saveBudget()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Budget</button>
+      <p id="budgetStatus" class="text-sm mt-2 text-green-600"></p>
+    </div>
+  <!-- 🤖 AI Recommendation Section -->
+    <div id="ai-section" class="hidden bg-white rounded-2xl shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">AI Recommendations</h3>
+      <input type="text" id="recommendPrompt" placeholder="e.g. groceries, festival" class="w-full border rounded px-3 py-2 mb-2" />
+      <input type="number" id="aiBudgetInput" placeholder="₹ e.g. 500" class="w-full border rounded px-3 py-2 mb-4" />
+      <button onclick="getRecommendations()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">🔍 Get Recommendations</button>
+      <div id="aiTextSection" class="mt-4 text-sm text-gray-700"></div>
+      <div id="aiProductsSection" class="grid gap-4 mt-4 grid-cols-1 sm:grid-cols-2"></div>
+    </div>
+
+  <!-- 🛍️ Product Section -->
+  <div id="product-section" style="display: none;">
+    <h3 class="text-lg font-semibold mb-4">Available Products</h3>
+    <div id="filterSortControls" style="margin-bottom: 20px; display: flex; gap: 20px;">
+      <label>
+        Category:
+        <select id="categoryFilter">
+          <option value="all">All</option>
+          <option value="groceries">Groceries</option>
+          <option value="hygiene">Hygiene</option>
+          <option value="personal care">Personal Care</option>
+        </select>
+      </label>
+
+      <label>
+        Sort by Price:
+        <select id="priceSort">
+          <option value="default">Default</option>
+          <option value="low-high">Low to High</option>
+          <option value="high-low">High to Low</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="tagFilterControls" style="margin-bottom: 20px;">
+      <h3 class="text-lg font-semibold mb-4">Filter by Tags:</h3>
+      <div id="tagCheckboxes" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+    </div>
+
+    <div id="searchPriceControls" style="margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+      <label>
+        Search:
+        <input type="text" id="productSearch" placeholder="Search by name..."  class="w-full border px-3 py-2 rounded mb-2" />
+      </label>
+      <label>
+        Max Price:
+        <input type="number" id="maxPriceFilter" placeholder="e.g. 200" min="0" class="w-full border px-3 py-2 rounded mb-2"  />
+      </label>
+    </div>
+
+    <div id="productGrid" class="product-grid"></div>
+  </div>
+
+ 
+    <!-- ✅ UPI Payment -->
+    <div id="upiPayment" class="hidden bg-white rounded-2xl shadow p-6">
+      <h3 class="text-lg font-semibold mb-4">Pay via UPI</h3>
+      <input type="text" id="userUpiId" placeholder="Enter your UPI ID" class="w-full border px-3 py-2 rounded mb-2" />
+      <input type="number" id="upiAmount" placeholder="Enter Amount" class="w-full border px-3 py-2 rounded mb-2" />
+      <button id="generateUpiBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Generate UPI</button>
+      <div id="upiQr" class="mt-4"></div>
+      <a id="upiLink" href="#" class="hidden" target="_blank">
+        <button class="bg-gray-800 text-white px-4 py-2 mt-2 rounded">Pay Now via App</button>
+      </a>
+    </div>
+
+
+  <!-- 🛒 Grocery Section -->
+  <div id="grocery-section" style="display: none;">
+    <h3>🛒 Grocery List from Recipes</h3>
+    <ul id="groceryList"></ul>
+    <button onclick="addGroceryToCart()">Add All to Cart</button>
+  </div>
+
+  <!-- 🛒 Cart Section -->
+  <div id="cart-section" style="display: none;">
+    <h3>Your Cart</h3>
+    <ul id="cartList"></ul>
+    <p>Total: <span id="totalAmount">₹0.00</span></p>
+  </div>
+
+  <!-- 🤝 Shared Cart -->
+  <div id="sharedCartControls" style="display: none; margin-top: 20px;" class="hidden bg-white rounded-2xl shadow p-6 col-span-full">
+     <h3 class="text-lg font-semibold mb-4">Shared Cart</h3>
+   <input type="email" id="inviteEmail" placeholder="Invite by email" class="w-full border px-3 py-2 rounded mb-2" />
+    <button onclick="createSharedCart()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">➕ Create Shared Cart</button>
+    <button onclick="copySharedCartLink()" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">🔗 Copy Share Link</button>
+    <p id="sharedCartStatus"></p>
+
+    <div style="margin-top: 10px;">
+      <input type="text" id="joinCartIdInput" placeholder="Enter Shared Cart ID" class="w-full border px-3 py-2 rounded mb-2" />
+      <button onclick="joinSharedCart()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Join Cart</button>
+      <p id="joinCartStatus"></p>
+    </div>
+
+    <button onclick="switchToPersonalCart()"  class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">👤 Switch to My Cart</button>
+
+    <div id="sharedCartList">
+      <h4>Your Shared Carts:</h4>
+    </div>
+
+    <div id="sharedCartItems" style="margin-top: 10px;"></div>
+    <button onclick="payMyShare()"  class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">💸 Pay My Share</button>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

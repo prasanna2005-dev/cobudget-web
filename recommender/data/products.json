@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Rice 5kg",
+    "price": 299,
+    "tag": "groceries",
+    "image": "https://images.unsplash.com/photo-1604908177522-3dd99f45c3e2?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "name": "Toothpaste",
+    "price": 49,
+    "tag": "hygiene",
+    "image": "https://images.unsplash.com/photo-1618916900586-84a1bbdf9cf3?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "name": "Cooking Oil 1L",
+    "price": 135,
+    "tag": "groceries",
+    "image": "https://images.unsplash.com/photo-1611078489935-31d46dfe2361?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "name": "Shampoo 180ml",
+    "price": 95,
+    "tag": "personal care",
+    "image": "https://images.unsplash.com/photo-1622529929675-f3735bb71779?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "name": "Wheat Flour 5kg",
+    "price": 240,
+    "tag": "groceries",
+    "image": "https://images.unsplash.com/photo-1627067221224-f097c1d4d204?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "name": "Chips",
+    "price": 30,
+    "tag": "snacks",
+    "image": ""
+  },
+  {
+    "name": "Juice",
+    "price": 60,
+    "tag": "drinks",
+    "image": ""
+  }
+]
